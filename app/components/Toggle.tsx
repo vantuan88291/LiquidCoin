@@ -260,13 +260,12 @@ function Checkbox(props: ToggleInputProps) {
   const offBackgroundColor = [
     disabled && colors.palette.neutral400,
     status === "error" && colors.errorBackground,
-    colors.palette.neutral200,
   ].filter(Boolean)[0]
 
   const outerBorderColor = [
     disabled && colors.palette.neutral400,
     status === "error" && colors.error,
-    !on && colors.palette.neutral800,
+    !on && colors.palette.whiteLine,
     colors.palette.secondary500,
   ].filter(Boolean)[0]
 
@@ -619,11 +618,11 @@ const $helper: TextStyle = {
 }
 
 const $label: TextStyle = {
-  flex: 1,
+  color: colors.palette.neutral100,
 }
 
 const $labelRight: TextStyle = {
-  marginStart: spacing.md,
+  marginStart: spacing.xs,
 }
 
 const $labelLeft: TextStyle = {

@@ -1,4 +1,11 @@
 const en = {
+  menu: {
+    home: "Home",
+    market: "Markets",
+    wallets: "Wallets",
+    portfolio: "Portfolio",
+    more: "More",
+  },
   common: {
     ok: "OK!",
     cancel: "Cancel",

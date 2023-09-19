@@ -98,7 +98,6 @@ export function Button(props: ButtonProps) {
   }
   function $textStyle({ pressed }) {
     return [
-      $textPresets[preset],
       $textStyleOverride,
       !!pressed && [$pressedTextPresets[preset], $pressedTextStyleOverride],
     ]
@@ -110,7 +109,7 @@ export function Button(props: ButtonProps) {
         <>
           {!!LeftAccessory && <LeftAccessory style={$leftAccessoryStyle} pressableState={state} />}
 
-          <Text tx={tx} text={text} txOptions={txOptions} style={$textStyle(state)}>
+          <Text tx={tx} text={text} txOptions={txOptions} preset="bold" style={$textStyle(state)}>
             {children}
           </Text>
 
@@ -163,22 +162,26 @@ const $viewPresets = {
     $baseViewStyle,
     { backgroundColor: colors.palette.neutral800 },
   ] as StyleProp<ViewStyle>,
+  normal: [{}] as StyleProp<ViewStyle>,
 }
 
 const $textPresets: Record<Presets, StyleProp<TextStyle>> = {
   default: $baseTextStyle,
   filled: $baseTextStyle,
   reversed: [$baseTextStyle, { color: colors.palette.neutral100 }],
+  normal: {},
 }
 
 const $pressedViewPresets: Record<Presets, StyleProp<ViewStyle>> = {
   default: { backgroundColor: colors.palette.neutral200 },
   filled: { backgroundColor: colors.palette.neutral400 },
   reversed: { backgroundColor: colors.palette.neutral700 },
+  normal: {},
 }
 
 const $pressedTextPresets: Record<Presets, StyleProp<TextStyle>> = {
   default: { opacity: 0.9 },
   filled: { opacity: 0.9 },
   reversed: { opacity: 0.9 },
+  normal: {},
 }

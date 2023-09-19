@@ -1,18 +1,11 @@
 import React, { ReactElement } from "react"
-import {
-  StyleProp,
-  TextStyle,
-  TouchableOpacity,
-  TouchableOpacityProps,
-  View,
-  ViewStyle,
-} from "react-native"
-import { isRTL, translate } from "../i18n"
-import { colors, spacing } from "../theme"
-import { ExtendedEdge, useSafeAreaInsetsStyle } from "../utils/useSafeAreaInsetsStyle"
-import { Icon, IconTypes } from "./Icon"
-import { Text, TextProps } from "./Text"
-
+import { ImageStyle, StyleProp, TextStyle, TouchableOpacityProps, ViewStyle } from "react-native"
+import { translate } from "../i18n"
+import { colors } from "../theme"
+import { ExtendedEdge } from "../utils/useSafeAreaInsetsStyle"
+import { TextProps } from "./Text"
+import { Header as HeaderRNE, HeaderProps } from "@rneui/themed"
+import { IconTypes, Icon } from "./Icon"
 export interface HeaderProps {
   /**
    * The layout of the title relative to the action components.
@@ -124,18 +117,6 @@ export interface HeaderProps {
    */
   safeAreaEdges?: ExtendedEdge[]
 }
-
-interface HeaderActionProps {
-  backgroundColor?: string
-  icon?: IconTypes
-  iconColor?: string
-  text?: TextProps["text"]
-  tx?: TextProps["tx"]
-  txOptions?: TextProps["txOptions"]
-  onPress?: TouchableOpacityProps["onPress"]
-  ActionComponent?: ReactElement
-}
-
 /**
  * Header that appears on many screens. Will hold navigation buttons and screen title.
  * The Header is meant to be used with the `screenOptions.header` option on navigators, routes, or screen components via `navigation.setOptions({ header })`.
@@ -143,172 +124,28 @@ interface HeaderActionProps {
  * - [Documentation and Examples](https://github.com/infinitered/ignite/blob/master/docs/Components-Header.md)
  */
 export function Header(props: HeaderProps) {
-  const {
-    backgroundColor = colors.background,
-    LeftActionComponent,
-    leftIcon,
-    leftIconColor,
-    leftText,
-    leftTx,
-    leftTxOptions,
-    onLeftPress,
-    onRightPress,
-    RightActionComponent,
-    rightIcon,
-    rightIconColor,
-    rightText,
-    rightTx,
-    rightTxOptions,
-    safeAreaEdges = ["top"],
-    title,
-    titleMode = "center",
-    titleTx,
-    titleTxOptions,
-    titleContainerStyle: $titleContainerStyleOverride,
-    style: $styleOverride,
-    titleStyle: $titleStyleOverride,
-    containerStyle: $containerStyleOverride,
-  } = props
-
-  const $containerInsets = useSafeAreaInsetsStyle(safeAreaEdges)
+  const { title, titleTx, titleTxOptions } = props
 
   const titleContent = titleTx ? translate(titleTx, titleTxOptions) : title
 
   return (
-    <View style={[$container, $containerInsets, { backgroundColor }, $containerStyleOverride]}>
-      <View style={[$wrapper, $styleOverride]}>
-        <HeaderAction
-          tx={leftTx}
-          text={leftText}
-          icon={leftIcon}
-          iconColor={leftIconColor}
-          onPress={onLeftPress}
-          txOptions={leftTxOptions}
-          backgroundColor={backgroundColor}
-          ActionComponent={LeftActionComponent}
-        />
-
-        {!!titleContent && (
-          <View
-            style={[
-              titleMode === "center" && $titleWrapperCenter,
-              titleMode === "flex" && $titleWrapperFlex,
-              $titleContainerStyleOverride,
-            ]}
-            pointerEvents="none"
-          >
-            <Text
-              weight="medium"
-              size="md"
-              text={titleContent}
-              style={[$title, $titleStyleOverride]}
-            />
-          </View>
-        )}
-
-        <HeaderAction
-          tx={rightTx}
-          text={rightText}
-          icon={rightIcon}
-          iconColor={rightIconColor}
-          onPress={onRightPress}
-          txOptions={rightTxOptions}
-          backgroundColor={backgroundColor}
-          ActionComponent={RightActionComponent}
-        />
-      </View>
-    </View>
+    <HeaderRNE
+      centerComponent={{ text: titleContent, style: $wrapper }}
+      placement="left"
+      containerStyle={$containter}
+      rightComponent={<Icon onPress={() => {}} style={$icon} icon="search" size={18} />}
+    />
   )
 }
 
-function HeaderAction(props: HeaderActionProps) {
-  const { backgroundColor, icon, text, tx, txOptions, onPress, ActionComponent, iconColor } = props
-
-  const content = tx ? translate(tx, txOptions) : text
-
-  if (ActionComponent) return ActionComponent
-
-  if (content) {
-    return (
-      <TouchableOpacity
-        style={[$actionTextContainer, { backgroundColor }]}
-        onPress={onPress}
-        disabled={!onPress}
-        activeOpacity={0.8}
-      >
-        <Text weight="medium" size="md" text={content} style={$actionText} />
-      </TouchableOpacity>
-    )
-  }
-
-  if (icon) {
-    return (
-      <Icon
-        size={24}
-        icon={icon}
-        color={iconColor}
-        onPress={onPress}
-        containerStyle={[$actionIconContainer, { backgroundColor }]}
-        style={isRTL ? { transform: [{ rotate: "180deg" }] } : {}}
-      />
-    )
-  }
-
-  return <View style={[$actionFillerContainer, { backgroundColor }]} />
+const $wrapper: TextStyle = {
+  color: colors.text,
+  fontSize: 20,
+  fontWeight: "bold",
 }
-
-const $wrapper: ViewStyle = {
-  height: 56,
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "space-between",
+const $containter: ViewStyle = {
+  backgroundColor: colors.background,
 }
-
-const $container: ViewStyle = {
-  width: "100%",
-}
-
-const $title: TextStyle = {
-  textAlign: "center",
-}
-
-const $actionTextContainer: ViewStyle = {
-  flexGrow: 0,
-  alignItems: "center",
-  justifyContent: "center",
-  height: "100%",
-  paddingHorizontal: spacing.md,
-  zIndex: 2,
-}
-
-const $actionText: TextStyle = {
-  color: colors.tint,
-}
-
-const $actionIconContainer: ViewStyle = {
-  flexGrow: 0,
-  alignItems: "center",
-  justifyContent: "center",
-  height: "100%",
-  paddingHorizontal: spacing.md,
-  zIndex: 2,
-}
-
-const $actionFillerContainer: ViewStyle = {
-  width: 16,
-}
-
-const $titleWrapperCenter: ViewStyle = {
-  alignItems: "center",
-  justifyContent: "center",
-  height: "100%",
-  width: "100%",
-  position: "absolute",
-  paddingHorizontal: spacing.xxl,
-  zIndex: 1,
-}
-
-const $titleWrapperFlex: ViewStyle = {
-  justifyContent: "center",
-  flexGrow: 1,
+const $icon: ImageStyle = {
+  margin: 6,
 }

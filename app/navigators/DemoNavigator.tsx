@@ -5,16 +5,16 @@ import { TextStyle, ViewStyle } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Icon } from "../components"
 import { translate } from "../i18n"
-import { DemoCommunityScreen, DemoShowroomScreen, DemoDebugScreen } from "../screens"
-import { DemoPodcastListScreen } from "../screens/DemoPodcastListScreen"
+import { MoreScreen, PortfolioScreen, WalletsScreen, MarketsScreen, HomeScreen } from "../screens"
 import { colors, spacing, typography } from "../theme"
 import { AppStackParamList, AppStackScreenProps } from "./AppNavigator"
 
 export type DemoTabParamList = {
-  DemoCommunity: undefined
-  DemoShowroom: { queryIndex?: string; itemIndex?: string }
-  DemoDebug: undefined
-  DemoPodcastList: undefined
+  Home: undefined
+  Markets: undefined
+  Wallets: undefined
+  Portfolio: undefined
+  More: undefined
 }
 
 /**
@@ -38,53 +38,83 @@ export function DemoNavigator() {
         headerShown: false,
         tabBarHideOnKeyboard: true,
         tabBarStyle: [$tabBar, { height: bottom + 70 }],
-        tabBarActiveTintColor: colors.text,
-        tabBarInactiveTintColor: colors.text,
+        tabBarActiveTintColor: colors.palette.blueActive,
+        tabBarInactiveTintColor: colors.palette.blueDarklbl,
         tabBarLabelStyle: $tabBarLabel,
         tabBarItemStyle: $tabBarItem,
       }}
     >
       <Tab.Screen
-        name="DemoShowroom"
-        component={DemoShowroomScreen}
+        name="Home"
+        component={HomeScreen}
         options={{
-          tabBarLabel: translate("demoNavigator.componentsTab"),
+          tabBarLabel: translate("menu.home"),
           tabBarIcon: ({ focused }) => (
-            <Icon icon="components" color={focused && colors.tint} size={30} />
+            <Icon
+              icon="home"
+              color={focused ? colors.palette.blueActive : colors.palette.blueDarklbl}
+              size={30}
+            />
           ),
         }}
       />
 
       <Tab.Screen
-        name="DemoCommunity"
-        component={DemoCommunityScreen}
+        name="Markets"
+        component={MarketsScreen}
         options={{
-          tabBarLabel: translate("demoNavigator.communityTab"),
+          tabBarLabel: translate("menu.market"),
           tabBarIcon: ({ focused }) => (
-            <Icon icon="community" color={focused && colors.tint} size={30} />
+            <Icon
+              icon="market"
+              color={focused ? colors.palette.blueActive : colors.palette.blueDarklbl}
+              size={30}
+            />
           ),
         }}
       />
 
       <Tab.Screen
-        name="DemoPodcastList"
-        component={DemoPodcastListScreen}
+        name="Wallets"
+        component={WalletsScreen}
         options={{
-          tabBarAccessibilityLabel: translate("demoNavigator.podcastListTab"),
-          tabBarLabel: translate("demoNavigator.podcastListTab"),
+          tabBarLabel: translate("menu.wallets"),
           tabBarIcon: ({ focused }) => (
-            <Icon icon="podcast" color={focused && colors.tint} size={30} />
+            <Icon
+              icon="wallets"
+              color={focused ? colors.palette.blueActive : colors.palette.blueDarklbl}
+              size={30}
+            />
           ),
         }}
       />
 
       <Tab.Screen
-        name="DemoDebug"
-        component={DemoDebugScreen}
+        name="Portfolio"
+        component={PortfolioScreen}
         options={{
-          tabBarLabel: translate("demoNavigator.debugTab"),
+          tabBarLabel: translate("menu.portfolio"),
           tabBarIcon: ({ focused }) => (
-            <Icon icon="debug" color={focused && colors.tint} size={30} />
+            <Icon
+              icon="portfolio"
+              color={focused ? colors.palette.blueActive : colors.palette.blueDarklbl}
+              size={30}
+            />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="More"
+        component={MoreScreen}
+        options={{
+          tabBarLabel: translate("menu.more"),
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              icon="more"
+              color={focused ? colors.palette.blueActive : colors.palette.blueDarklbl}
+              size={30}
+            />
           ),
         }}
       />
@@ -93,8 +123,16 @@ export function DemoNavigator() {
 }
 
 const $tabBar: ViewStyle = {
-  backgroundColor: colors.background,
-  borderTopColor: colors.transparent,
+  backgroundColor: colors.palette.neutral100,
+  borderTopLeftRadius: 6,
+  borderTopRightRadius: 6,
+  shadowOffset: {
+    width: 0,
+    height: 12,
+  },
+  shadowOpacity: 0.59,
+  shadowRadius: 9.0,
+  elevation: 24,
 }
 
 const $tabBarItem: ViewStyle = {

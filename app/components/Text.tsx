@@ -42,6 +42,7 @@ export interface TextProps extends RNTextProps {
    * Children components.
    */
   children?: React.ReactNode
+  color?: string
 }
 
 /**
@@ -51,7 +52,17 @@ export interface TextProps extends RNTextProps {
  * - [Documentation and Examples](https://github.com/infinitered/ignite/blob/master/docs/Components-Text.md)
  */
 export function Text(props: TextProps) {
-  const { weight, size, tx, txOptions, text, children, style: $styleOverride, ...rest } = props
+  const {
+    weight,
+    size,
+    tx,
+    txOptions,
+    text,
+    children,
+    style: $styleOverride,
+    color,
+    ...rest
+  } = props
 
   const i18nText = tx && translate(tx, txOptions)
   const content = i18nText || text || children
@@ -63,6 +74,7 @@ export function Text(props: TextProps) {
     $fontWeightStyles[weight],
     $sizeStyles[size],
     $styleOverride,
+    color && { color },
   ]
 
   return (
