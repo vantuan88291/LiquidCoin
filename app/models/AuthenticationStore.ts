@@ -4,6 +4,7 @@ import { RULES_LOGIN } from "../utils/validates/login-validate"
 import { validate } from "../utils/validate"
 import { api } from "../services/api"
 import { translate } from "../i18n"
+import { remove, saveString } from "../utils/storage"
 
 export const AuthenticationStoreModel = types
   .model("AuthenticationStore")
@@ -17,6 +18,7 @@ export const AuthenticationStoreModel = types
       }),
       {},
     ),
+    remember: false,
     loading: false,
   })
   .views((store) => ({
@@ -31,6 +33,9 @@ export const AuthenticationStoreModel = types
     setLoading(loading: boolean) {
       store.loading = loading
     },
+    setRemember() {
+      store.remember = !store.remember
+    },
     setEmail(value: string) {
       store.paramsLogin.email = value.replace(/ /g, "")
       store.errorMessage.delete("email")
@@ -41,9 +46,11 @@ export const AuthenticationStoreModel = types
     },
     logout() {
       store.authToken = undefined
+      remove(commons.TOKEN)
     },
     resetParams: () => {
       applySnapshot(store.paramsLogin, {})
+      self.remember = false
     },
   }))
   .actions((self) => ({
@@ -57,6 +64,9 @@ export const AuthenticationStoreModel = types
       self.setLoading(true)
       const result = yield api.doLogin(self.paramsLogin)
       if (result.kind === "ok") {
+        if (self.remember) {
+          saveString(commons.TOKEN, result.data?.data?.token)
+        }
         self.setAuthToken(result.data?.data?.token)
       } else {
         self.errorMessage.replace({

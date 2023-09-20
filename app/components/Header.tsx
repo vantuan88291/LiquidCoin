@@ -130,7 +130,7 @@ export function Header(props: HeaderProps) {
 
   return (
     <HeaderRNE
-      centerComponent={{ text: titleContent, style: $wrapper }}
+      centerComponent={{ text: titleContent.toUpperCase(), style: $wrapper }}
       placement="left"
       containerStyle={$containter}
       rightComponent={<Icon onPress={() => {}} style={$icon} icon="search" size={18} />}

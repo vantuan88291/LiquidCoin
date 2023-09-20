@@ -11,6 +11,7 @@ import {
 import { isRTL, translate } from "../i18n"
 import { colors, spacing, typography } from "../theme"
 import { Text, TextProps } from "./Text"
+import { isIos } from "../utils/commons"
 
 export interface TextFieldAccessoryProps {
   style: StyleProp<any>
@@ -252,7 +253,7 @@ const $inputStyle: TextStyle = {
   // https://github.com/facebook/react-native/issues/21720#issuecomment-532642093
   paddingVertical: 0,
   paddingHorizontal: 0,
-  marginVertical: spacing.xs,
+  marginVertical: spacing.sm,
   marginHorizontal: spacing.sm,
 }
 
@@ -271,5 +272,5 @@ const $leftAccessoryStyle: ViewStyle = {
   height: 40,
   justifyContent: "center",
   alignItems: "center",
-  top: 1,
+  top: isIos ? 1 : 4,
 }

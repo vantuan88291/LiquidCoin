@@ -4,7 +4,7 @@ export * from "./LoginScreen"
 export * from "./ErrorScreen/ErrorBoundary"
 // export other screens here
 export * from "./HomeScreen"
-export * from "./MarketsScreen"
+export * from "./Markets/MarketsScreen"
 export * from "./WalletsScreen"
 export * from "./PortfolioScreen"
 export * from "./MoreScreen"

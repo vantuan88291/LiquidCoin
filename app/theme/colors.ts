@@ -35,6 +35,11 @@ const palette = {
   blueDarklbl: "#9194BB",
   blueActive: "#597AF4",
   blueLight: "#BDCFFF",
+  blueSelected: "#6992FF",
+  blueUnSelected: "#E4E9F9",
+  greyText: "#8E92B2",
+  green: "#3BBA7D",
+  red: "#F94B5C",
 
   overlay20: "rgba(25, 16, 21, 0.2)",
   overlay50: "rgba(25, 16, 21, 0.5)",
@@ -63,7 +68,7 @@ export const colors = {
   /**
    * The default color of the screen background.
    */
-  background: palette.neutral200,
+  background: "#EEF0FA",
   /**
    * The default border color.
    */

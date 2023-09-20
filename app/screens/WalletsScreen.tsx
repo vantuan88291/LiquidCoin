@@ -2,7 +2,7 @@ import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
 import { ViewStyle } from "react-native"
 import { AppStackScreenProps } from "app/navigators"
-import { Header, Screen, Text } from "app/components"
+import { Header, Screen } from "app/components"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
@@ -17,7 +17,6 @@ export const WalletsScreen: FC<WalletsScreenProps> = observer(function WalletsSc
   return (
     <Screen style={$root} preset="fixed">
       <Header title={"wallets"} />
-      <Text text="wallets" />
     </Screen>
   )
 })

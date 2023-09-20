@@ -13,13 +13,15 @@ import {
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { useColorScheme } from "react-native"
+import { useColorScheme, View, ActivityIndicator, ViewStyle } from "react-native"
 import * as Screens from "app/screens"
 import Config from "../config"
 import { useStores } from "../models" // @demo remove-current-line
 import { DemoNavigator, DemoTabParamList } from "./DemoNavigator" // @demo remove-current-line
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
+import { loadString } from "../utils/storage"
+import { commons } from "../utils/commons"
 
 export type AppStackParamList = {
   Login: undefined // @demo remove-current-line
@@ -37,9 +39,30 @@ const Stack = createNativeStackNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
   const {
-    authenticationStore: { isAuthenticated },
+    authenticationStore: { isAuthenticated, setAuthToken },
   } = useStores()
+  const [loading, setLoading] = React.useState(true)
 
+  React.useEffect(() => {
+    processData()
+  }, [])
+
+  const processData = async () => {
+    const token = await loadString(commons.TOKEN)
+    if (token) {
+      setAuthToken(token)
+      setLoading(false)
+    } else {
+      setLoading(false)
+    }
+  }
+  if (loading) {
+    return (
+      <View style={$root}>
+        <ActivityIndicator color={colors.text} size="large" />
+      </View>
+    )
+  }
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
@@ -76,3 +99,9 @@ export const AppNavigator = observer(function AppNavigator(props: NavigationProp
     </NavigationContainer>
   )
 })
+
+const $root: ViewStyle = {
+  flex: 1,
+  alignItems: "center",
+  justifyContent: "center",
+}

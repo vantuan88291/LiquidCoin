@@ -2,22 +2,18 @@ import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
 import { ViewStyle } from "react-native"
 import { AppStackScreenProps } from "app/navigators"
-import { Header, Screen, Text } from "app/components"
-// import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "app/models"
+import { Header, Screen, Button } from "app/components"
+import { useStores } from "../models"
 
 interface HomeScreenProps extends AppStackScreenProps<"Home"> {}
 
 export const HomeScreen: FC<HomeScreenProps> = observer(function HomeScreen() {
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
+  const { authenticationStore } = useStores()
 
-  // Pull in navigation via hook
-  // const navigation = useNavigation()
   return (
     <Screen style={$root} preset="fixed">
       <Header title={"Home"} />
-      <Text text="home" />
+      <Button onPress={authenticationStore.logout} tx="common.logOut" />
     </Screen>
   )
 })

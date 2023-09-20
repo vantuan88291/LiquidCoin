@@ -51,6 +51,7 @@ export class Api {
       },
     })
   }
+
   async processData(response: ApiResponse<any>): Promise<GetDataResult> {
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
@@ -79,6 +80,16 @@ export class Api {
       captcha: "yWOEjZMIhY",
       captchaBypass: "yWOEjZMIhY",
     })
+    return this.processData(response)
+  }
+
+  async getMarkets(): Promise<GetDataResult> {
+    const response: ApiResponse<any> = await this.apisauce.get("mobile-api/market/getmarkets")
+    return this.processData(response)
+  }
+
+  async getSum(): Promise<GetDataResult> {
+    const response: ApiResponse<any> = await this.apisauce.get("public/v1/market/get-summaries")
     return this.processData(response)
   }
 }

@@ -29,7 +29,6 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const authPasswordInput = useRef<TextInput>()
 
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
-  const [remember, setRemember] = useState(false)
   const { authenticationStore } = useStores()
 
   useEffect(() => {
@@ -37,10 +36,6 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       authenticationStore.resetParams()
     }
   }, [])
-
-  const onToggle = () => {
-    setRemember(!remember)
-  }
   const PasswordRightAccessory = useMemo(
     () =>
       function PasswordRightAccessory(props: TextFieldAccessoryProps) {
@@ -133,9 +128,9 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         />
         <View style={$rowMore}>
           <Toggle
-            onPress={onToggle}
+            onPress={authenticationStore.setRemember}
             containerStyle={$toggerStyle}
-            value={remember}
+            value={authenticationStore.remember}
             labelPosition={"right"}
             labelTx={"loginScreen.remember"}
           />
@@ -219,5 +214,3 @@ const $rowMore: ViewStyle = {
   alignItems: "flex-end",
   marginBottom: spacing.xxxl,
 }
-
-// @demo remove-file
