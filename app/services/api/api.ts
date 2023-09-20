@@ -5,19 +5,13 @@
  * See the [Backend API Integration](https://github.com/infinitered/ignite/blob/master/docs/Backend-API-Integration.md)
  * documentation for more details.
  */
-import {
-  ApiResponse, // @demo remove-current-line
-  ApisauceInstance,
-  create,
-} from "apisauce"
+import { ApiResponse, ApisauceInstance, create } from "apisauce"
 import Config from "../../config"
-import { GeneralApiProblem, getGeneralApiProblem } from "./apiProblem" // @demo remove-current-line
-import type {
-  ApiConfig,
-  ApiFeedResponse, // @demo remove-current-line
-} from "./api.types"
-import type { EpisodeSnapshotIn } from "../../models/Episode" // @demo remove-current-line
-
+import { getGeneralApiProblem } from "./apiProblem" // @demo remove-current-line
+import type { ApiConfig } from "./api.types"
+import { GetDataResult } from "./api.types"
+import * as Device from "expo-device"
+import UserAgent from "react-native-user-agent"
 /**
  * Configuring the apisauce instance.
  */
@@ -35,53 +29,58 @@ export class Api {
   config: ApiConfig
 
   /**
+   * email: tokenize.test@gmail.com,
+   * password: Test#111,
    * Set up our API instance. Keep this lightweight!
    */
   constructor(config: ApiConfig = DEFAULT_API_CONFIG) {
     this.config = config
+    this.setup()
+  }
+
+  async setup() {
+    const agent = await UserAgent.getUserAgent()
     this.apisauce = create({
       baseURL: this.config.url,
       timeout: this.config.timeout,
       headers: {
         Accept: "application/json",
+        "Content-Type": "application/json;charset=utf-8",
+        "user-agent": agent,
+        "TOK-DEVICE-ID": Device.osInternalBuildId,
       },
     })
   }
-
-  // @demo remove-block-start
-  /**
-   * Gets a list of recent React Native Radio episodes.
-   */
-  async getEpisodes(): Promise<{ kind: "ok"; episodes: EpisodeSnapshotIn[] } | GeneralApiProblem> {
-    // make the api call
-    const response: ApiResponse<ApiFeedResponse> = await this.apisauce.get(
-      `api.json?rss_url=https%3A%2F%2Ffeeds.simplecast.com%2FhEI_f9Dx`,
-    )
-
-    // the typical ways to die when calling an api
+  async processData(response: ApiResponse<any>): Promise<GetDataResult> {
     if (!response.ok) {
       const problem = getGeneralApiProblem(response)
       if (problem) return problem
     }
-
-    // transform the data into the format we are expecting
     try {
-      const rawData = response.data
-
-      // This is where we transform the data into the shape we expect for our MST model.
-      const episodes: EpisodeSnapshotIn[] = rawData.items.map((raw) => ({
-        ...raw,
-      }))
-
-      return { kind: "ok", episodes }
-    } catch (e) {
-      if (__DEV__) {
-        console.tron.error(`Bad data: ${e.message}\n${response.data}`, e.stack)
+      const data = response.data
+      if (data.code === 200 || data) {
+        return { kind: "ok", data: data }
+      } else {
+        return { kind: "bad-data", data: data?.message }
       }
-      return { kind: "bad-data" }
+    } catch {
+      const data = response.data
+      if (data.code === 200 || data) {
+        return { kind: "ok", data: data }
+      } else {
+        return { kind: "bad-data", data: data?.message }
+      }
     }
   }
-  // @demo remove-block-end
+
+  async doLogin(data: any): Promise<GetDataResult> {
+    const response: ApiResponse<any> = await this.apisauce.post("mobile-api/auth/login", {
+      ...data,
+      captcha: "yWOEjZMIhY",
+      captchaBypass: "yWOEjZMIhY",
+    })
+    return this.processData(response)
+  }
 }
 
 // Singleton instance of the API for convenience

@@ -1,9 +1,17 @@
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useMemo, useRef, useState } from "react"
-import { Image, ImageStyle, ScrollView, TextInput, TextStyle, ViewStyle, View } from "react-native"
+import {
+  Image,
+  ImageStyle,
+  ScrollView,
+  TextInput,
+  TextStyle,
+  ViewStyle,
+  View,
+  ActivityIndicator,
+} from "react-native"
 import {
   Button,
-  Header,
   Icon,
   Screen,
   Text,
@@ -20,40 +28,19 @@ interface LoginScreenProps extends AppStackScreenProps<"Login"> {}
 export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_props) {
   const authPasswordInput = useRef<TextInput>()
 
-  const [authPassword, setAuthPassword] = useState("")
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [attemptsCount, setAttemptsCount] = useState(0)
-  const {
-    authenticationStore: { authEmail, setAuthEmail, setAuthToken, validationError },
-  } = useStores()
+  const [remember, setRemember] = useState(false)
+  const { authenticationStore } = useStores()
 
   useEffect(() => {
-    // Return a "cleanup" function that React will run when the component unmounts
     return () => {
-      setAuthPassword("")
-      setAuthEmail("")
+      authenticationStore.resetParams()
     }
   }, [])
 
-  const error = isSubmitted ? validationError : ""
-
-  function login() {
-    setIsSubmitted(true)
-    setAttemptsCount(attemptsCount + 1)
-
-    if (validationError) return
-
-    // Make a request to your server to get an authentication token.
-    // If successful, reset the fields and set the token.
-    setIsSubmitted(false)
-    setAuthPassword("")
-    setAuthEmail("")
-
-    // We'll mock this with a fake token.
-    setAuthToken(String(Date.now()))
+  const onToggle = () => {
+    setRemember(!remember)
   }
-
   const PasswordRightAccessory = useMemo(
     () =>
       function PasswordRightAccessory(props: TextFieldAccessoryProps) {
@@ -105,9 +92,9 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       <ScrollView style={$screenContentContainer}>
         <View style={$logoView}>
           <Image style={$logo} source={images.logo} />
-          <Text text={"Sign in"} color={colors.palette.neutral100} preset="heading" />
+          <Text tx={"loginScreen.signIn"} color={colors.palette.neutral100} preset="heading" />
           <Text
-            text={"Please sign in to continue"}
+            tx={"loginScreen.enterDetails"}
             color={colors.palette.neutral100}
             preset="formLabel"
           />
@@ -115,63 +102,69 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 
         <TextField
           LeftAccessory={LeftAccessoryUser}
-          value={authEmail}
-          onChangeText={setAuthEmail}
+          value={authenticationStore.paramsLogin.email}
+          onChangeText={authenticationStore.setEmail}
           containerStyle={$textField}
           autoCapitalize="none"
           autoComplete="email"
           autoCorrect={false}
           keyboardType="email-address"
-          placeholder="Email"
-          helper={error}
-          status={error ? "error" : undefined}
+          placeholderTx="loginScreen.emailFieldLabel"
+          helper={authenticationStore.errorMessage.get("email")}
+          status={authenticationStore.errorMessage.get("email") != null ? "error" : undefined}
           onSubmitEditing={() => authPasswordInput.current?.focus()}
         />
 
         <TextField
           ref={authPasswordInput}
-          value={authPassword}
+          value={authenticationStore.paramsLogin.password}
           LeftAccessory={LeftAccessoryPass}
-          onChangeText={setAuthPassword}
+          onChangeText={authenticationStore.setPass}
           containerStyle={$textField}
           autoCapitalize="none"
           autoComplete="password"
           autoCorrect={false}
           secureTextEntry={isAuthPasswordHidden}
-          placeholder="Password"
-          onSubmitEditing={login}
+          placeholderTx="loginScreen.passwordFieldLabel"
+          helper={authenticationStore.errorMessage.get("password")}
+          status={authenticationStore.errorMessage.get("password") != null ? "error" : undefined}
+          onSubmitEditing={authenticationStore.onLogin}
           RightAccessory={PasswordRightAccessory}
         />
         <View style={$rowMore}>
           <Toggle
+            onPress={onToggle}
             containerStyle={$toggerStyle}
-            value={false}
+            value={remember}
             labelPosition={"right"}
-            label={"Remember me"}
+            labelTx={"loginScreen.remember"}
           />
           <Button preset="normal">
-            <Text text={"Forgot your password?"} preset="bold" color={colors.palette.neutral100} />
+            <Text tx={"loginScreen.forgotPass"} preset="bold" color={colors.palette.neutral100} />
           </Button>
         </View>
         <Button
           testID="login-button"
-          text="SIGN IN"
+          tx="loginScreen.signInUpper"
+          disabled={authenticationStore.loading}
           style={$tapButton}
+          RightAccessory={(style) =>
+            authenticationStore.loading && (
+              <ActivityIndicator
+                style={style.style}
+                color={colors.palette.blueActive}
+                size="small"
+              />
+            )
+          }
           textStyle={$lblLogin}
           preset="reversed"
-          onPress={login}
+          onPress={authenticationStore.onLogin}
         />
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            marginTop: spacing.lg,
-            marginBottom: spacing.sm,
-          }}
-        >
-          <Text color={colors.palette.neutral100} text={"Don’t have an account yet? "} />
+        <View style={$rowFooter}>
+          <Text color={colors.palette.neutral100} tx={"loginScreen.registerAsk"} />
           <Button preset="normal">
-            <Text text={"SIGN UP"} preset="bold" color={colors.palette.neutral100} />
+            <Text tx={"loginScreen.signup"} preset="bold" color={colors.palette.neutral100} />
           </Button>
         </View>
       </ScrollView>
@@ -182,6 +175,12 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
 const $screenContentContainer: ViewStyle = {
   paddingVertical: spacing.xxl,
   paddingHorizontal: spacing.sm,
+}
+const $rowFooter: ViewStyle = {
+  flexDirection: "row",
+  justifyContent: "center",
+  marginTop: spacing.lg,
+  marginBottom: spacing.sm,
 }
 
 const $logoView: TextStyle = {
