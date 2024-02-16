@@ -50,6 +50,9 @@ export const useData = () => {
     return sumEntry / sumCont
   }
   const calculateEntry = (liquid: number) => {
+    if (data.isLong) {
+      return +formatAmount(liquid + (liquid * (+data.risk/100)), data.tickSize)
+    }
     return +formatAmount(liquid - (liquid * (+data.risk/100)), data.tickSize)
   }
   const getNextVolume = (vol: number) => {
