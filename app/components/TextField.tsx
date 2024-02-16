@@ -11,7 +11,6 @@ import {
 import { isRTL, translate } from "../i18n"
 import { colors, spacing, typography } from "../theme"
 import { Text, TextProps } from "./Text"
-import { isIos } from "../utils/commons"
 
 export interface TextFieldAccessoryProps {
   style: StyleProp<any>
@@ -100,8 +99,9 @@ export interface TextFieldProps extends Omit<TextInputProps, "ref"> {
 
 /**
  * A component that allows for the entering and editing of text.
- *
- * - [Documentation and Examples](https://github.com/infinitered/ignite/blob/master/docs/Components-TextField.md)
+ * @see [Documentation and Examples]{@link https://docs.infinite.red/ignite-cli/boilerplate/components/TextField/}
+ * @param {TextFieldProps} props - The props for the `TextField` component.
+ * @returns {JSX.Element} The rendered `TextField` component.
  */
 export const TextField = forwardRef(function TextField(props: TextFieldProps, ref: Ref<TextInput>) {
   const {
@@ -124,7 +124,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
     inputWrapperStyle: $inputWrapperStyleOverride,
     ...TextInputProps
   } = props
-  const input = useRef<TextInput>()
+  const input = useRef<TextInput>(null)
 
   const disabled = TextInputProps.editable === false || status === "disabled"
 
@@ -145,7 +145,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
     $inputWrapperStyleOverride,
   ]
 
-  const $inputStyles = [
+  const $inputStyles: StyleProp<TextStyle> = [
     $inputStyle,
     disabled && { color: colors.textDim },
     isRTL && { textAlign: "right" as TextStyle["textAlign"] },
@@ -159,13 +159,16 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
     HelperTextProps?.style,
   ]
 
+  /**
+   *
+   */
   function focusInput() {
     if (disabled) return
 
     input.current?.focus()
   }
 
-  useImperativeHandle(ref, () => input.current)
+  useImperativeHandle(ref, () => input.current as TextInput)
 
   return (
     <TouchableOpacity
@@ -191,7 +194,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
             style={$leftAccessoryStyle}
             status={status}
             editable={!disabled}
-            multiline={TextInputProps.multiline}
+            multiline={TextInputProps.multiline ?? false}
           />
         )}
 
@@ -200,7 +203,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
           underlineColorAndroid={colors.transparent}
           textAlignVertical="top"
           placeholder={placeholderContent}
-          placeholderTextColor={colors.palette.neutral100}
+          placeholderTextColor={colors.textDim}
           {...TextInputProps}
           editable={!disabled}
           style={$inputStyles}
@@ -211,7 +214,7 @@ export const TextField = forwardRef(function TextField(props: TextFieldProps, re
             style={$rightAccessoryStyle}
             status={status}
             editable={!disabled}
-            multiline={TextInputProps.multiline}
+            multiline={TextInputProps.multiline ?? false}
           />
         )}
       </View>
@@ -239,7 +242,8 @@ const $inputWrapperStyle: ViewStyle = {
   alignItems: "flex-start",
   borderWidth: 1,
   borderRadius: 4,
-  borderColor: colors.palette.whiteLine,
+  backgroundColor: colors.palette.neutral200,
+  borderColor: colors.palette.neutral400,
   overflow: "hidden",
 }
 
@@ -247,13 +251,13 @@ const $inputStyle: TextStyle = {
   flex: 1,
   alignSelf: "stretch",
   fontFamily: typography.primary.normal,
-  color: colors.palette.neutral100,
+  color: colors.text,
   fontSize: 16,
   height: 24,
   // https://github.com/facebook/react-native/issues/21720#issuecomment-532642093
   paddingVertical: 0,
   paddingHorizontal: 0,
-  marginVertical: spacing.sm,
+  marginVertical: spacing.xs,
   marginHorizontal: spacing.sm,
 }
 
@@ -272,5 +276,4 @@ const $leftAccessoryStyle: ViewStyle = {
   height: 40,
   justifyContent: "center",
   alignItems: "center",
-  top: isIos ? 1 : 4,
 }

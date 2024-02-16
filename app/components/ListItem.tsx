@@ -89,7 +89,7 @@ export interface ListItemProps extends TouchableOpacityProps {
 }
 
 interface ListItemActionProps {
-  icon: IconTypes
+  icon?: IconTypes
   iconColor?: string
   Component?: ReactElement
   size: number
@@ -98,8 +98,9 @@ interface ListItemActionProps {
 
 /**
  * A styled row component that can be used in FlatList, SectionList, or by itself.
- *
- * - [Documentation and Examples](https://github.com/infinitered/ignite/blob/master/docs/Components-ListItem.md)
+ * @see [Documentation and Examples]{@link https://docs.infinite.red/ignite-cli/boilerplate/components/ListItem/}
+ * @param {ListItemProps} props - The props for the `ListItem` component.
+ * @returns {JSX.Element} The rendered `ListItem` component.
  */
 export function ListItem(props: ListItemProps) {
   const {
@@ -160,6 +161,10 @@ export function ListItem(props: ListItemProps) {
   )
 }
 
+/**
+ * @param {ListItemActionProps} props - The props for the `ListItemAction` component.
+ * @returns {JSX.Element | null} The rendered `ListItemAction` component.
+ */
 function ListItemAction(props: ListItemActionProps) {
   const { icon, Component, iconColor, size, side } = props
 
@@ -167,7 +172,7 @@ function ListItemAction(props: ListItemActionProps) {
 
   if (Component) return Component
 
-  if (icon) {
+  if (icon !== undefined) {
     return (
       <Icon
         size={24}

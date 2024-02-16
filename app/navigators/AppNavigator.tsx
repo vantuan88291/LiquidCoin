@@ -8,25 +8,39 @@ import {
   DarkTheme,
   DefaultTheme,
   NavigationContainer,
-  NavigatorScreenParams, // @demo remove-current-line
 } from "@react-navigation/native"
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { useColorScheme, View, ActivityIndicator, ViewStyle } from "react-native"
+import { useColorScheme } from "react-native"
 import * as Screens from "app/screens"
 import Config from "../config"
-import { useStores } from "../models" // @demo remove-current-line
-import { DemoNavigator, DemoTabParamList } from "./DemoNavigator" // @demo remove-current-line
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
-import { loadString } from "../utils/storage"
-import { commons } from "../utils/commons"
 
+/**
+ * This type allows TypeScript to know what routes are defined in this navigator
+ * as well as what properties (if any) they might take when navigating to them.
+ *
+ * If no params are allowed, pass through `undefined`. Generally speaking, we
+ * recommend using your MobX-State-Tree store(s) to keep application state
+ * rather than passing state through navigation params.
+ *
+ * For more information, see this documentation:
+ *   https://reactnavigation.org/docs/params/
+ *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
+ *   https://reactnavigation.org/docs/typescript/#organizing-types
+ */
 export type AppStackParamList = {
-  Login: undefined // @demo remove-current-line
-  Demo: NavigatorScreenParams<DemoTabParamList> // @demo remove-current-line
+  Welcome: undefined
+  // 🔥 Your screens go here
+  // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
+
+/**
+ * This is a list of all the route names that will exit the app if the back button
+ * is pressed while in that screen. Only affects Android.
+ */
 const exitRoutes = Config.exitRoutes
 
 export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStackScreenProps<
@@ -38,45 +52,13 @@ export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStack
 const Stack = createNativeStackNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
-  const {
-    authenticationStore: { isAuthenticated, setAuthToken },
-  } = useStores()
-  const [loading, setLoading] = React.useState(true)
-
-  React.useEffect(() => {
-    processData()
-  }, [])
-
-  const processData = async () => {
-    const token = await loadString(commons.TOKEN)
-    if (token) {
-      setAuthToken(token)
-      setLoading(false)
-    } else {
-      setLoading(false)
-    }
-  }
-  if (loading) {
-    return (
-      <View style={$root}>
-        <ActivityIndicator color={colors.text} size="large" />
-      </View>
-    )
-  }
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
-      initialRouteName={isAuthenticated ? "Demo" : "Login"} // @demo remove-current-line
     >
-      {isAuthenticated ? (
-        <>
-          <Stack.Screen name="Demo" component={DemoNavigator} />
-        </>
-      ) : (
-        <>
-          <Stack.Screen name="Login" component={Screens.LoginScreen} />
-        </>
-      )}
+          <Stack.Screen name="Welcome" component={Screens.WelcomeScreen} />
+      {/** 🔥 Your screens go here */}
+      {/* IGNITE_GENERATOR_ANCHOR_APP_STACK_SCREENS */}
     </Stack.Navigator>
   )
 })
@@ -99,9 +81,3 @@ export const AppNavigator = observer(function AppNavigator(props: NavigationProp
     </NavigationContainer>
   )
 })
-
-const $root: ViewStyle = {
-  flex: 1,
-  alignItems: "center",
-  justifyContent: "center",
-}

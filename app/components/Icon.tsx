@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TouchableOpacityProps,
   View,
+  ViewProps,
   ViewStyle,
 } from "react-native"
 
@@ -47,8 +48,9 @@ interface IconProps extends TouchableOpacityProps {
 /**
  * A component to render a registered icon.
  * It is wrapped in a <TouchableOpacity /> if `onPress` is provided, otherwise a <View />.
- *
- * - [Documentation and Examples](https://github.com/infinitered/ignite/blob/master/docs/Components-Icon.md)
+ * @see [Documentation and Examples]{@link https://docs.infinite.red/ignite-cli/boilerplate/components/Icon/}
+ * @param {IconProps} props - The props for the `Icon` component.
+ * @returns {JSX.Element} The rendered `Icon` component.
  */
 export function Icon(props: IconProps) {
   const {
@@ -61,9 +63,16 @@ export function Icon(props: IconProps) {
   } = props
 
   const isPressable = !!WrapperProps.onPress
-  const Wrapper: ComponentType<TouchableOpacityProps> = WrapperProps?.onPress
-    ? TouchableOpacity
-    : View
+  const Wrapper = (WrapperProps?.onPress ? TouchableOpacity : View) as ComponentType<
+    TouchableOpacityProps | ViewProps
+  >
+
+  const $imageStyle: StyleProp<ImageStyle> = [
+    $imageStyleBase,
+    color !== undefined && { tintColor: color },
+    size !== undefined && { width: size, height: size },
+    $imageStyleOverride,
+  ]
 
   return (
     <Wrapper
@@ -71,33 +80,15 @@ export function Icon(props: IconProps) {
       {...WrapperProps}
       style={$containerStyleOverride}
     >
-      <Image
-        style={[
-          $imageStyle,
-          color && { tintColor: color },
-          size && { width: size, height: size },
-          $imageStyleOverride,
-        ]}
-        source={iconRegistry[icon]}
-      />
+      <Image style={$imageStyle} source={iconRegistry[icon]} />
     </Wrapper>
   )
 }
 
 export const iconRegistry = {
-  home: require("../../assets/icons/home.png"),
-  market: require("../../assets/icons/Markets.png"),
-  wallets: require("../../assets/icons/Wallets.png"),
-  portfolio: require("../../assets/icons/Portfolio.png"),
-  more: require("../../assets/icons/more.png"),
-  hidden: require("../../assets/icons/hidden.png"),
-  view: require("../../assets/icons/view.png"),
-  password: require("../../assets/icons/password.png"),
-  user: require("../../assets/icons/user_email.png"),
-  check: require("../../assets/icons/check.png"),
-  search: require("../../assets/icons/Search.png"),
+  wallet: require("../../assets/icons/Wallets.png"),
 }
 
-const $imageStyle: ImageStyle = {
+const $imageStyleBase: ImageStyle = {
   resizeMode: "contain",
 }

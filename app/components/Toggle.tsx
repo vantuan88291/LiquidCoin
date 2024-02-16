@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   TouchableOpacityProps,
   View,
+  ViewProps,
   ViewStyle,
 } from "react-native"
 import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated"
@@ -154,8 +155,9 @@ interface ToggleInputProps {
 /**
  * Renders a boolean input.
  * This is a controlled component that requires an onValueChange callback that updates the value prop in order for the component to reflect user actions. If the value prop is not updated, the component will continue to render the supplied value prop instead of the expected result of any user actions.
- *
- * - [Documentation and Examples](https://github.com/infinitered/ignite/blob/master/docs/Components-Toggle.md)
+ * @see [Documentation and Examples]{@link https://docs.infinite.red/ignite-cli/boilerplate/components/Toggle/}
+ * @param {ToggleProps} props - The props for the `Toggle` component.
+ * @returns {JSX.Element} The rendered `Toggle` component.
  */
 export function Toggle(props: ToggleProps) {
   const {
@@ -180,8 +182,8 @@ export function Toggle(props: ToggleProps) {
 
   const disabled = editable === false || status === "disabled" || props.disabled
 
-  const Wrapper = useMemo<ComponentType<TouchableOpacityProps>>(
-    () => (disabled ? View : TouchableOpacity),
+  const Wrapper = useMemo(
+    () => (disabled ? View : TouchableOpacity) as ComponentType<TouchableOpacityProps | ViewProps>,
     [disabled],
   )
   const ToggleInput = useMemo(() => ToggleInputs[variant] || (() => null), [variant])
@@ -194,6 +196,9 @@ export function Toggle(props: ToggleProps) {
     HelperTextProps?.style,
   ]
 
+  /**
+   * @param {GestureResponderEvent} e - The event object.
+   */
   function handlePress(e: GestureResponderEvent) {
     if (disabled) return
     onValueChange?.(!value)
@@ -213,12 +218,12 @@ export function Toggle(props: ToggleProps) {
         {labelPosition === "left" && <FieldLabel {...props} labelPosition={labelPosition} />}
 
         <ToggleInput
-          on={value}
-          disabled={disabled}
+          on={!!value}
+          disabled={!!disabled}
           status={status}
-          outerStyle={props.inputOuterStyle}
-          innerStyle={props.inputInnerStyle}
-          detailStyle={props.inputDetailStyle}
+          outerStyle={props.inputOuterStyle ?? {}}
+          innerStyle={props.inputInnerStyle ?? {}}
+          detailStyle={props.inputDetailStyle ?? {}}
           switchAccessibilityMode={switchAccessibilityMode}
           checkboxIcon={checkboxIcon}
         />
@@ -246,6 +251,10 @@ const ToggleInputs: Record<Variants, FC<ToggleInputProps>> = {
   radio: Radio,
 }
 
+/**
+ * @param {ToggleInputProps} props - The props for the `Checkbox` component.
+ * @returns {JSX.Element} The rendered `Checkbox` component.
+ */
 function Checkbox(props: ToggleInputProps) {
   const {
     on,
@@ -260,12 +269,13 @@ function Checkbox(props: ToggleInputProps) {
   const offBackgroundColor = [
     disabled && colors.palette.neutral400,
     status === "error" && colors.errorBackground,
+    colors.palette.neutral200,
   ].filter(Boolean)[0]
 
   const outerBorderColor = [
     disabled && colors.palette.neutral400,
     status === "error" && colors.error,
-    !on && colors.palette.whiteLine,
+    !on && colors.palette.neutral800,
     colors.palette.secondary500,
   ].filter(Boolean)[0]
 
@@ -298,14 +308,22 @@ function Checkbox(props: ToggleInputProps) {
         ]}
       >
         <Image
-          source={iconRegistry[checkboxIcon] || iconRegistry.check}
-          style={[$checkboxDetail, { tintColor: iconTintColor }, $detailStyleOverride]}
+          source={checkboxIcon ? iconRegistry[checkboxIcon] : iconRegistry.check}
+          style={[
+            $checkboxDetail,
+            !!iconTintColor && { tintColor: iconTintColor },
+            $detailStyleOverride,
+          ]}
         />
       </Animated.View>
     </View>
   )
 }
 
+/**
+ * @param {ToggleInputProps} props - The props for the `Radio` component.
+ * @returns {JSX.Element} The rendered `Radio` component.
+ */
 function Radio(props: ToggleInputProps) {
   const {
     on,
@@ -365,6 +383,10 @@ function Radio(props: ToggleInputProps) {
   )
 }
 
+/**
+ * @param {ToggleInputProps} props - The props for the `Switch` component.
+ * @returns {JSX.Element} The rendered `Switch` component.
+ */
 function Switch(props: ToggleInputProps) {
   const {
     on,
@@ -467,6 +489,10 @@ function Switch(props: ToggleInputProps) {
   )
 }
 
+/**
+ * @param {ToggleInputProps & { role: "on" | "off" }} props - The props for the `SwitchAccessibilityLabel` component.
+ * @returns {JSX.Element} The rendered `SwitchAccessibilityLabel` component.
+ */
 function SwitchAccessibilityLabel(props: ToggleInputProps & { role: "on" | "off" }) {
   const { on, disabled, status, switchAccessibilityMode, role, innerStyle, detailStyle } = props
 
@@ -474,7 +500,7 @@ function SwitchAccessibilityLabel(props: ToggleInputProps & { role: "on" | "off"
 
   const shouldLabelBeVisible = (on && role === "on") || (!on && role === "off")
 
-  const $switchAccessibilityStyle = [
+  const $switchAccessibilityStyle: StyleProp<ViewStyle> = [
     $switchAccessibility,
     role === "off" && { end: "5%" },
     role === "on" && { left: "5%" },
@@ -510,6 +536,10 @@ function SwitchAccessibilityLabel(props: ToggleInputProps & { role: "on" | "off"
   )
 }
 
+/**
+ * @param {BaseToggleProps} props - The props for the `FieldLabel` component.
+ * @returns {JSX.Element} The rendered `FieldLabel` component.
+ */
 function FieldLabel(props: BaseToggleProps) {
   const {
     status,
@@ -618,11 +648,11 @@ const $helper: TextStyle = {
 }
 
 const $label: TextStyle = {
-  color: colors.palette.neutral100,
+  flex: 1,
 }
 
 const $labelRight: TextStyle = {
-  marginStart: spacing.xs,
+  marginStart: spacing.md,
 }
 
 const $labelLeft: TextStyle = {
