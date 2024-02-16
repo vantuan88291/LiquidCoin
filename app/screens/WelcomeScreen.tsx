@@ -50,49 +50,49 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
               value={`${data.entry}`}
               onChangeText={text => setParam('entry', text)}
               containerStyle={$bottomContainer}
-              keyboardType='numeric'
+              keyboardType='numbers-and-punctuation'
               label={'Entry'}
             />
             <TextField
               value={`${data.qty}`}
               onChangeText={text => setParam('qty', text)}
               containerStyle={$bottomContainer}
-              keyboardType='numeric'
+              keyboardType='numbers-and-punctuation'
               label={'Quantity (include leverage)'}
             />
             <TextField
               value={`${data.leverage}`}
               onChangeText={text => setParam('leverage', text)}
               containerStyle={$bottomContainer}
-              keyboardType='numeric'
+              keyboardType='numbers-and-punctuation'
               label={'leverage (Eg: 20)'}
             />
             <TextField
               value={`${data.tickSize}`}
               onChangeText={text => setParam('tickSize', text)}
               containerStyle={$bottomContainer}
-              keyboardType='numeric'
+              keyboardType='numbers-and-punctuation'
               label={'Tick size(decimal number of coin)'}
             />
             <TextField
               value={`${data.nextPrecent}`}
               onChangeText={text => setParam('nextPrecent', text)}
               containerStyle={$bottomContainer}
-              keyboardType='numeric'
+              keyboardType='numbers-and-punctuation'
               label={'Percent of next order (%)'}
             />
             <TextField
               value={`${data.risk}`}
               onChangeText={text => setParam('risk', text)}
               containerStyle={$bottomContainer}
-              keyboardType='numeric'
+              keyboardType='numbers-and-punctuation'
               label={'Ratio risk of next volume'}
             />
             <TextField
               value={`${data.totalOrder}`}
               onChangeText={text => setParam('totalOrder', text)}
               containerStyle={$bottomContainer}
-              keyboardType='numeric'
+              keyboardType='numbers-and-punctuation'
               label={'Total generate orders'}
             />
             <Button disabledStyle={$btn}
