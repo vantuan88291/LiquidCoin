@@ -28,7 +28,7 @@ import { ErrorBoundary } from "./screens/ErrorScreen/ErrorBoundary"
 import * as storage from "./utils/storage"
 import { customFontsToLoad } from "./theme"
 import Config from "./config"
-
+import codePush from "react-native-code-push";
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
 // Web linking configuration
@@ -106,4 +106,4 @@ function App(props: AppProps) {
   )
 }
 
-export default App
+export default codePush({ checkFrequency: codePush.CheckFrequency.ON_APP_RESUME })(App)
