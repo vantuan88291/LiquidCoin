@@ -11,10 +11,10 @@ export const ItemOrder = ({
                             lev,
                             tickSize
                           }: { item: DataItemOrder; index: number, lev: number, tickSize: number }) => {
-    const renderRow = (title, value) => (
+    const renderRow = (title, value, color = null) => (
         <View style={$row}>
             <Text text={title}/>
-            <Text preset='bold' text={value}/>
+            <Text style={[$value, {color}]} preset='bold' text={value}/>
         </View>
     )
   return (
@@ -23,9 +23,9 @@ export const ItemOrder = ({
       <View style={$flex}>
           {renderRow(`New Entry:`, `${item.entry} USDT`)}
           {renderRow(`New Volume:`, `${item.volume} USDT`)}
-          {renderRow(`Estimated margin:`, `${formatAmount(item.volume / lev, tickSize)} USDT`)}
-          {renderRow(`Liquid Price:`, `${formatAmount(+item.liquid + (item.liquid * (0.09353 / 100)), tickSize)} USDT`)}
-          {renderRow(`Entry after DCA:`, `${formatAmount(item?.avg, tickSize)} USDT`)}
+          {renderRow(`Estimated margin:`, `${formatAmount(item.volume / lev, tickSize)} USDT`, colors.palette.secondary400)}
+          {renderRow(`Liquid Price:`, `${formatAmount(+item.liquid + (item.liquid * (0.09353 / 100)), tickSize)} USDT`, colors.palette.angry500)}
+          {renderRow(`Entry after DCA:`, `${formatAmount(item?.avg, tickSize)} USDT`, colors.palette.secondary400)}
       </View>
     </View>
   )
@@ -41,6 +41,10 @@ const $root: ViewStyle = {
 
 const $lbl: TextStyle = {
   marginRight: 10,
+}
+const $value: TextStyle = {
+    flex: 1,
+    textAlign: 'right',
 }
 
 const $flex: ViewStyle = {flex: 1}

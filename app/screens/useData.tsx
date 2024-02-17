@@ -11,7 +11,7 @@ export const useData = () => {
   const [data, setData] = React.useState({
     entry: '',
     qty: '',
-    leverage: '',
+    leverage: 20,
     totalOrder: 5,
     isLong: false,
     tickSize: 3,
@@ -99,7 +99,7 @@ export const useData = () => {
   return {
     data,
     setParam,
-    isValid: data.entry > 0 && data.qty > 0 && data.leverage >= 1 && data.totalOrder >= 5,
+    isValid: data.entry > 0 && data.qty > 0 && data.leverage >= 1 && data.totalOrder >= 2 && data.totalOrder < 11,
     orders,
     calculateOrders,
   }

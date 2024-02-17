@@ -92,8 +92,9 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
               value={`${data.totalOrder}`}
               onChangeText={text => setParam('totalOrder', text)}
               containerStyle={$bottomContainer}
+              maxLength={2}
               keyboardType='numbers-and-punctuation'
-              label={'Total generate orders'}
+              label={'Total generate orders(min 2, max 10)'}
             />
             <Button disabledStyle={$btn}
                     disabledTextStyle={$lblDisable}
