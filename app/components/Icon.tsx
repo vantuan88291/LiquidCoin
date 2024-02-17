@@ -87,6 +87,7 @@ export function Icon(props: IconProps) {
 
 export const iconRegistry = {
   wallet: require("../../assets/icons/Wallets.png"),
+  down: require("../../assets/icons/drop.png"),
 }
 
 const $imageStyleBase: ImageStyle = {
