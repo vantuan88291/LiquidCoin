@@ -11,7 +11,7 @@ export const ItemOrder = ({
                             lev,
                             tickSize
                           }: { item: DataItemOrder; index: number, lev: number, tickSize: number }) => {
-    const renderRow = (title, value, color = null) => (
+    const renderRow = (title, value, color = colors.text) => (
         <View style={$row}>
             <Text text={title}/>
             <Text style={[$value, {color}]} preset='bold' text={value}/>
@@ -32,7 +32,7 @@ export const ItemOrder = ({
 }
 const $root: ViewStyle = {
   flexDirection: 'row',
-  backgroundColor: colors.palette.secondary100,
+  backgroundColor: colors.palette.neutral900,
   padding: 6,
   borderRadius: 8,
   alignItems: 'flex-start',

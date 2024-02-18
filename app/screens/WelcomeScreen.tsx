@@ -39,16 +39,18 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
         key={`${index}`}/>
     const onSubmit = () => {
         calculateOrders()
-        setTimeout(() => {
-            ref.current?.scrollTo({y: 500})
-        }, 500)
+        if (show) {
+            setTimeout(() => {
+                ref.current?.scrollTo({y: 500})
+            }, 500)
+        }
     }
     const setAdvan = () => {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setShow(arg => !arg)
     }
     return (
-        <Screen safeAreaEdges={['top', 'bottom']} preset='fixed' style={$container}>
+        <Screen statusBarStyle='light' safeAreaEdges={['top', 'bottom']} preset='fixed' style={$container}>
             <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
                 <View>
                     <Text preset='subheading' text={'Calculate entry price'}/>
@@ -81,7 +83,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
                         <TouchableOpacity onPress={setAdvan} style={$btnAdv}>
                             <Text style={$flex} preset={'formLabel'}
                                   text={`Setting: x${data.leverage}, next ${data.nextPrecent}%, ${data.risk}% risk, total: ${data.totalOrder}`}/>
-                            <Icon style={{
+                            <Icon color={colors.text} style={{
                                 transform: [{rotate: show ? '180deg' : '0deg'}],
                             }} size={15} icon='down'/>
                         </TouchableOpacity>
@@ -128,7 +130,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
                                 disabled={!isValid}
                                 onPress={onSubmit}
                                 style={$bottomContainer}
-                                preset='filled'
+                                preset='reversed'
                                 text={'Calculate'}/>
                     </View>
                     {!!orders.length && <View style={$bottomFt}>
