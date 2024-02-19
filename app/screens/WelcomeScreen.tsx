@@ -53,7 +53,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
         <Screen statusBarStyle='light' safeAreaEdges={['top', 'bottom']} preset='fixed' style={$container}>
             <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
                 <View>
-                    <Text preset='subheading' text={'Calculate entry price (Isolate only'}/>
+                    <Text preset='subheading' text={'Calculate entry (Isolate)'}/>
                     <View>
                         <Toggle
                             onPress={async () => {
