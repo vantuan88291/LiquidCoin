@@ -50,6 +50,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
                     <Text preset='subheading' text={'Calculate entry'}/>
                     <View>
                         <Toggle
+                            variant='switch'
                             onPress={async () => {
                                 await setParam('isLong', !data.isLong)
                                 if (isValid) {
