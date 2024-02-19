@@ -45,7 +45,7 @@ export const Update = () => {
 const $loading: ViewStyle = {
     position: 'absolute',
     top: 0,
-    height: 30,
+    height: 50,
     backgroundColor: colors.errorBackground,
     width: '100%'
 }
