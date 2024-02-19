@@ -106,4 +106,4 @@ function App(props: AppProps) {
   )
 }
 
-export default codePush({ checkFrequency: codePush.CheckFrequency.ON_APP_RESUME })(App)
+export default codePush({ updateDialog: true, installMode: codePush.InstallMode.IMMEDIATE })(App)
