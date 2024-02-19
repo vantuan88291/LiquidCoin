@@ -10,6 +10,8 @@
  * The app navigation resides in ./app/navigators, so head over there
  * if you're interested in adding screens and navigators.
  */
+import {Update} from "./screens/Update";
+
 if (__DEV__) {
   // Load Reactotron configuration in development. We don't want to
   // include this in our production bundle, so we are using `if (__DEV__)`
@@ -29,8 +31,14 @@ import * as storage from "./utils/storage"
 import { customFontsToLoad } from "./theme"
 import Config from "./config"
 import codePush from "react-native-code-push";
+import {Platform, UIManager} from "react-native";
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+}
 // Web linking configuration
 const prefix = Linking.createURL("/")
 const config = {
@@ -101,9 +109,10 @@ function App(props: AppProps) {
           initialState={initialNavigationState}
           onStateChange={onNavigationStateChange}
         />
+        <Update />
       </ErrorBoundary>
     </SafeAreaProvider>
   )
 }
 
-export default codePush({ checkFrequency: codePush.CheckFrequency.ON_APP_RESUME, installMode: codePush.InstallMode.IMMEDIATE })(App)
+export default codePush({ checkFrequency: codePush.CheckFrequency.MANUAL, installMode: codePush.InstallMode.IMMEDIATE })(App)

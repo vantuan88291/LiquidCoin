@@ -1,10 +1,10 @@
 import {observer} from "mobx-react-lite"
 import React, {FC} from "react"
 import {
-    LayoutAnimation, Platform,
+    LayoutAnimation,
     ScrollView,
     TextStyle,
-    TouchableOpacity, UIManager,
+    TouchableOpacity,
     View,
     ViewStyle
 } from "react-native"
@@ -17,12 +17,6 @@ import {AppStackScreenProps} from "../navigators"
 import {colors} from "../theme"
 import {ItemOrder} from "app/screens/ItemOrder";
 import {useData} from "app/screens/useData";
-
-if (Platform.OS === 'android') {
-    if (UIManager.setLayoutAnimationEnabledExperimental) {
-        UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
-}
 
 interface WelcomeScreenProps extends AppStackScreenProps<"Welcome"> {
 }
@@ -53,7 +47,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
         <Screen statusBarStyle='light' safeAreaEdges={['top', 'bottom']} preset='fixed' style={$container}>
             <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
                 <View>
-                    <Text preset='subheading' text={'Calculate entry (Isolate)'}/>
+                    <Text preset='subheading' text={'Calculate entry'}/>
                     <View>
                         <Toggle
                             onPress={async () => {
@@ -64,7 +58,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
                             }}
                             value={data.isLong}
                             containerStyle={$bottomContainer}
-                            label={'Long'}
+                            label={'Long (Isolate)'}
                             helper={'(Choose Long or Short, default is Short)'}/>
                         <TextField
                             value={`${data.entry}`}
