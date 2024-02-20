@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">tokenize</string>
+    <string name="app_name">LiquidCoin</string>
+    <string name="CodePushDeploymentKey">test</string>
 </resources>

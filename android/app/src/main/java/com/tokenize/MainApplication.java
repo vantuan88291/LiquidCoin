@@ -3,7 +3,7 @@ package com.tokenize;
 import android.app.Application;
 import android.content.res.Configuration;
 import androidx.annotation.NonNull;
-
+import com.microsoft.codepush.react.CodePush;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactNativeHost;
@@ -14,6 +14,7 @@ import com.facebook.soloader.SoLoader;
 
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import expo.modules.ApplicationLifecycleDispatcher;
 import expo.modules.ReactNativeHostWrapper;
 
@@ -35,7 +36,13 @@ public class MainApplication extends Application implements ReactApplication {
         return packages;
       }
 
-      @Override
+        @Nullable
+        @Override
+        protected String getJSBundleFile() {
+            return CodePush.getJSBundleFile();
+        }
+
+        @Override
       protected String getJSMainModuleName() {
         return "index";
       }
