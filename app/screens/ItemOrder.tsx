@@ -3,7 +3,7 @@ import {Text} from "app/components";
 import {TextStyle, View, ViewStyle} from "react-native";
 import React from "react";
 import {DataItemOrder} from "app/screens/useData";
-import {formatAmount} from "app/utils/utils";
+import {formattedCurrency} from "app/utils/utils";
 
 export const ItemOrder = ({
                             item,
@@ -21,11 +21,11 @@ export const ItemOrder = ({
     <View style={$root}>
       <Text style={$lbl} preset='subheading' text={`${index + 1}.`}/>
       <View style={$flex}>
-          {renderRow(`New Entry:`, `${item.entry} USDT`)}
-          {renderRow(`New Volume:`, `${item.volume} USDT`)}
-          {renderRow(`Estimated margin:`, `${formatAmount(item.volume / lev, tickSize)} USDT`, colors.palette.secondary400)}
-          {renderRow(`Liquid Price:`, `${formatAmount(+item.liquid + (item.liquid * (0.09353 / 100)), tickSize)} USDT`, colors.palette.angry500)}
-          {renderRow(`Entry after DCA:`, `${formatAmount(item?.avg, tickSize)} USDT`, colors.palette.secondary400)}
+          {renderRow(`New Entry:`, `${formattedCurrency(item.entry)} USDT`)}
+          {renderRow(`New Volume:`, `${formattedCurrency(item.volume)} USDT`)}
+          {renderRow(`Estimated margin:`, `${formattedCurrency(item.volume / lev, tickSize)} USDT`, colors.palette.secondary400)}
+          {renderRow(`Liquid Price:`, `${formattedCurrency(+item.liquid + (item.liquid * (0.09353 / 100)), tickSize)} USDT`, colors.palette.angry500)}
+          {renderRow(`Entry after DCA:`, `${formattedCurrency(item?.avg, tickSize)} USDT`, colors.palette.secondary400)}
       </View>
     </View>
   )

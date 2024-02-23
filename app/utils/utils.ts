@@ -22,6 +22,17 @@ function trimTraillingZeros(
   }
   return str;
 }
+export function trimZero(str: string | number): string {
+  if (typeof str === 'string') {
+    const { decimalSeparator } = formatIcon;
+    // return str.replace(
+    //   new RegExp(`(${decimalSeparator}[0-9]*[1-9])0+$|.0*$`),
+    //   '$1',
+    // );
+    return trimTraillingZeros(str, decimalSeparator);
+  }
+  return str.toString();
+}
 function truncate(num: number | string, trun: number): number | string {
   if (!num) {
     return 0;
@@ -49,4 +60,31 @@ function truncate(num: number | string, trun: number): number | string {
 }
 export const formatAmount = (amount: number, tickSize = 4) => {
   return truncate(amount, tickSize)
+}
+
+export function formatNumber(num: number | string, trun: number): string {
+  const { digitGroupingSeparator, decimalSeparator } = formatIcon;
+
+  const pt = `\\B(?=(\\d{3})+(?!\\d))`;
+  const rex = new RegExp(pt, 'g');
+  let formattedValue = num;
+  const truncatedNumber = truncate(num, trun);
+
+  const [pre, post] = truncatedNumber.toString().split('.');
+  const truncatedPost = (post || '').padEnd(trun, '0').slice(-trun);
+  const decimals =
+    truncatedPost && truncatedPost.length > 0
+      ? `${decimalSeparator}${truncatedPost}`
+      : '';
+  formattedValue = `${pre.replace(
+    rex,
+    `$&${digitGroupingSeparator}`,
+  )}${decimals}`;
+  return formattedValue;
+}
+export function formattedCurrency(
+  num: number | string,
+  tickSize = 4
+): string {
+  return trimZero(formatNumber(num, tickSize));
 }
