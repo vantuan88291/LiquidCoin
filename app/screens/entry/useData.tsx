@@ -38,7 +38,7 @@ export const EntryProvider = ({children}) => {
   const calculateLiquid = (entry: number, vol: number, isLong: boolean) => {
     const cont = vol / entry
     let liquid = 0
-    const psMargin = entry * (cont / +leverage)
+    const psMargin = entry * (cont / +(leverage || 1))
     const mainMargin = entry * cont * 0.005
     if (isLong) {
       liquid = (mainMargin - psMargin + entry * cont) / cont
