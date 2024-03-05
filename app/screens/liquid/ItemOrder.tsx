@@ -2,7 +2,7 @@ import {colors} from "app/theme";
 import {Text} from "app/components";
 import {TextStyle, View, ViewStyle} from "react-native";
 import React from "react";
-import {DataItemOrder} from "app/screens/useData";
+import {DataItemOrder} from "app/screens/liquid/useData";
 import {formattedCurrency} from "app/utils/utils";
 
 export const ItemOrder = ({

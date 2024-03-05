@@ -7,6 +7,15 @@ export interface DataItemOrder {
   liquid?: any
   avg?: any
 }
+export const calculateEntryPrice = (data: DataItemOrder[]) => {
+  const sumEntry = data.reduce((sum, item) => {
+    return sum + (item.entry * (item.volume / item.entry))
+  }, 0)
+  const sumCont = data.reduce((sum, item) => {
+    return sum + (item.volume / item.entry)
+  }, 0)
+  return sumEntry / sumCont
+}
 export const useData = () => {
   const [data, setData] = React.useState({
     entry: '',
@@ -39,15 +48,6 @@ export const useData = () => {
       liquid = (entry * cont - mainMargin + psMargin) / cont
     }
     return formatAmount(liquid, data.tickSize)
-  }
-  const calculateEntryPrice = (data: DataItemOrder[]) => {
-    const sumEntry = data.reduce((sum, item) => {
-      return sum + (item.entry * (item.volume / item.entry))
-    }, 0)
-    const sumCont = data.reduce((sum, item) => {
-      return sum + (item.volume / item.entry)
-    }, 0)
-    return sumEntry / sumCont
   }
   const calculateEntry = (liquid: number) => {
     if (data.isLong) {
