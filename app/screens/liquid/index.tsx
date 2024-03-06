@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite"
-import React, { FC } from "react"
+import React from "react"
 import {
   LayoutAnimation,
   ScrollView,
@@ -7,8 +7,9 @@ import {
   TouchableOpacity,
   View,
   ViewStyle,
+  Switch,
 } from "react-native"
-import { Button, Icon, Text, TextField, Toggle } from "app/components"
+import { Button, Icon, Text, TextField } from "app/components"
 import { ItemOrder } from "app/screens/liquid/ItemOrder"
 import { useData } from "app/screens/liquid/useData"
 import { colors } from "../../theme"
@@ -43,19 +44,21 @@ export const Liquid = observer(function WelcomeScreen() {
       <ScrollView ref={ref} showsVerticalScrollIndicator={false}>
         <View>
           <View>
-            <Toggle
-              variant="switch"
-              onPress={async () => {
-                await setParam("isLong", !data.isLong)
-                if (isValid) {
-                  onSubmit()
-                }
-              }}
-              value={data.isLong}
-              containerStyle={$bottomContainer}
-              label={"Long (Isolate)"}
-              helper={"(Choose Long or Short, default is Short)"}
-            />
+            <View style={$swich}>
+              <Switch
+                trackColor={{false: colors.palette.greyText, true: colors.palette.green}}
+                thumbColor={colors.palette.green}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={async () => {
+                  await setParam("isLong", !data.isLong)
+                  if (isValid) {
+                    onSubmit()
+                  }
+                }}
+                value={data.isLong}
+              />
+              <Text text={'Long (Isolate)'}/>
+            </View>
             <TextField
               value={`${data.entry}`}
               onChangeText={(text) => setParam("entry", text)}
@@ -171,6 +174,7 @@ const $btnAdv: ViewStyle = {
   justifyContent: "space-between",
   paddingVertical: 10,
 }
+const $swich: ViewStyle = {flexDirection: 'row', alignItems: 'center', gap: 10}
 const $lblDisable: TextStyle = {
   color: colors.palette.neutral500,
 }
