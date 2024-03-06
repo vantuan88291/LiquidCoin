@@ -1,5 +1,5 @@
 import React from "react"
-import {formatAmount} from "app/utils/utils";
+import { formatAmount } from "app/utils/utils"
 
 export interface DataItemOrder {
   entry: any
@@ -9,17 +9,17 @@ export interface DataItemOrder {
 }
 export const calculateEntryPrice = (data: DataItemOrder[]) => {
   const sumEntry = data.reduce((sum, item) => {
-    return sum + (item.entry * (item.volume / item.entry))
+    return sum + item.entry * (item.volume / item.entry)
   }, 0)
   const sumCont = data.reduce((sum, item) => {
-    return sum + (item.volume / item.entry)
+    return sum + item.volume / item.entry
   }, 0)
   return sumEntry / sumCont
 }
 export const useData = () => {
   const [data, setData] = React.useState({
-    entry: '',
-    qty: '',
+    entry: "",
+    qty: "",
     leverage: 20,
     totalOrder: 5,
     isLong: false,
@@ -29,11 +29,11 @@ export const useData = () => {
   })
   const [orders, setOrders] = React.useState<DataItemOrder[]>([])
   const setParam = (key, value) => {
-    setData(arg => ({
+    setData((arg) => ({
       ...arg,
-      [key]: value
+      [key]: value,
     }))
-    if (key === 'isLong') {
+    if (key === "isLong") {
       data.isLong = value
     }
   }
@@ -51,12 +51,12 @@ export const useData = () => {
   }
   const calculateEntry = (liquid: number) => {
     if (data.isLong) {
-      return +formatAmount(liquid + (liquid * (+data.risk/100)), data.tickSize)
+      return +formatAmount(liquid + liquid * (+data.risk / 100), data.tickSize)
     }
-    return +formatAmount(liquid - (liquid * (+data.risk/100)), data.tickSize)
+    return +formatAmount(liquid - liquid * (+data.risk / 100), data.tickSize)
   }
   const getNextVolume = (vol: number) => {
-    return +formatAmount(vol + (vol * (data.nextPrecent / 100)))
+    return +formatAmount(vol + vol * (data.nextPrecent / 100))
   }
   const calculateOrders = () => {
     const listOrders = []
@@ -69,22 +69,34 @@ export const useData = () => {
     listOrders.push(firstOrder)
     for (let i = 1; i < data.totalOrder; i++) {
       if (i === 1) {
-        const avgPr = calculateEntryPrice([firstOrder, {
-          entry: calculateEntry(+firstOrder.liquid),
-          volume: getNextVolume(firstOrder.volume),
-        }])
+        const avgPr = calculateEntryPrice([
+          firstOrder,
+          {
+            entry: calculateEntry(+firstOrder.liquid),
+            volume: getNextVolume(firstOrder.volume),
+          },
+        ])
         listOrders.push({
           entry: calculateEntry(+firstOrder.liquid),
           volume: getNextVolume(firstOrder.volume),
           avg: avgPr,
-          liquid: +formatAmount(+calculateLiquid(avgPr, getNextVolume(firstOrder.volume) + firstOrder.volume), data.tickSize),
+          liquid: +formatAmount(
+            +calculateLiquid(avgPr, getNextVolume(firstOrder.volume) + firstOrder.volume),
+            data.tickSize,
+          ),
         })
       } else {
-        const entryAvgItem = calculateEntryPrice([...listOrders, {
-          entry: calculateEntry(+listOrders[listOrders.length - 1].liquid),
-          volume: getNextVolume(+listOrders[listOrders.length - 1].volume),
-        }])
-        const liquidItem = calculateLiquid(entryAvgItem, listOrders.reduce((sum, item) => sum + item.volume, 0))
+        const entryAvgItem = calculateEntryPrice([
+          ...listOrders,
+          {
+            entry: calculateEntry(+listOrders[listOrders.length - 1].liquid),
+            volume: getNextVolume(+listOrders[listOrders.length - 1].volume),
+          },
+        ])
+        const liquidItem = calculateLiquid(
+          entryAvgItem,
+          listOrders.reduce((sum, item) => sum + item.volume, 0),
+        )
         const itemNewOrder = {
           entry: calculateEntry(+listOrders[listOrders.length - 1].liquid),
           volume: getNextVolume(+listOrders[listOrders.length - 1].volume),
@@ -99,7 +111,12 @@ export const useData = () => {
   return {
     data,
     setParam,
-    isValid: data.entry > 0 && data.qty > 0 && data.leverage >= 1 && data.totalOrder >= 2 && data.totalOrder < 11,
+    isValid:
+      data.entry > 0 &&
+      data.qty > 0 &&
+      data.leverage >= 1 &&
+      data.totalOrder >= 2 &&
+      data.totalOrder < 11,
     orders,
     calculateOrders,
   }

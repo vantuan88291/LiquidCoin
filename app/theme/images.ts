@@ -1,3 +1,1 @@
-export const images = {
-
-}
+export const images = {}
