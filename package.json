@@ -25,7 +25,7 @@
     "expo:start": "expo start",
     "expo:android": "expo start --android",
     "expo:ios": "expo start --ios",
-    "expo:web": "expo start --web",
+    "web": "expo start --web",
     "release": "appcenter codepush release-react -a vantuan88291-gmail.com/LiquidCoin -d Production --token test"
   },
   "overrides": {
