@@ -10,8 +10,6 @@ import Config from "../../config"
 import { getGeneralApiProblem } from "./apiProblem" // @demo remove-current-line
 import type { ApiConfig } from "./api.types"
 import { GetDataResult } from "./api.types"
-import * as Device from "expo-device"
-import UserAgent from "react-native-user-agent"
 /**
  * Configuring the apisauce instance.
  */
@@ -29,8 +27,6 @@ export class Api {
   config: ApiConfig
 
   /**
-   * email: tokenize.test@gmail.com,
-   * password: Test#111,
    * Set up our API instance. Keep this lightweight!
    */
   constructor(config: ApiConfig = DEFAULT_API_CONFIG) {
@@ -39,15 +35,12 @@ export class Api {
   }
 
   async setup() {
-    const agent = await UserAgent.getUserAgent()
     this.apisauce = create({
       baseURL: this.config.url,
       timeout: this.config.timeout,
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=utf-8",
-        "user-agent": agent,
-        "TOK-DEVICE-ID": Device.osInternalBuildId,
       },
     })
   }
@@ -80,16 +73,6 @@ export class Api {
       captcha: "yWOEjZMIhY",
       captchaBypass: "yWOEjZMIhY",
     })
-    return this.processData(response)
-  }
-
-  async getMarkets(): Promise<GetDataResult> {
-    const response: ApiResponse<any> = await this.apisauce.get("mobile-api/market/getmarkets")
-    return this.processData(response)
-  }
-
-  async getSum(): Promise<GetDataResult> {
-    const response: ApiResponse<any> = await this.apisauce.get("public/v1/market/get-summaries")
     return this.processData(response)
   }
 }

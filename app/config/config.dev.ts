@@ -6,5 +6,5 @@
  * https://reactnative.dev/docs/security#storing-sensitive-info
  */
 export default {
-  API_URL: "https://api.tokenize-dev.com/",
+  API_URL: "https://api.com/",
 }
