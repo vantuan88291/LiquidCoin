@@ -1,4 +1,6 @@
-# Welcome to Tokenize!
+# Welcome to LiquidCoin!
+
+Demo: https://elegant-boba-44e7aa.netlify.app/
 
 [![CircleCI](https://circleci.com/gh/infinitered/ignite.svg?style=svg)](https://circleci.com/gh/infinitered/ignite)
 
